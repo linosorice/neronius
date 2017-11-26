@@ -18,7 +18,7 @@ const STORY_PATH = process.env.STORY_PATH;
 bot.on('message', (msg) => {
 	if (msg.text.toString().toLowerCase().includes('/'+process.env.TELEGRAM_BOT_COMMAND)) {
 		fs.readdir(IMG_PATH, (err, files) => {
-			bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'My ready posts: ' + files.length);
+			bot.sendMessage(msg.chat.id, 'My ready posts: ' + files.length);
 		});
 	}
 	if (msg.text.toString().toLowerCase().includes('/voting_power')) {
@@ -26,7 +26,7 @@ bot.on('message', (msg) => {
 			var secondsago = (new Date - new Date(result[0].last_vote_time + "Z")) / 1000;
 		    var vpow = result[0].voting_power + (10000 * secondsago / 432000);
 	        vpow = Math.min(vpow / 100, 100).toFixed(2);
-			bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'My current voting power: ' + vpow);
+			bot.sendMessage(msg.chat.id, 'My current voting power: ' + vpow + '%');
 		});
 	}
 });

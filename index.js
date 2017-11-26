@@ -52,29 +52,30 @@ bot.on('message', (msg) => {
 });
 
 function generatePost() {
+	fs.readdir(IMG_PATH, function(err, items) {
+		if (items && items.length > 0) {
+			var filename = items[0];
+	  	console.log("[neronius-bot] try file: " + filename);
 
-	// list files in images folder
-	fs.readdirSync(IMG_PATH).forEach(filename => {
-  	console.error("[neronius-bot] try file: " + filename);
-
-		// remove the extension
-		rootFilename = filename.replace(/\.[^/.]+$/, "")
-	  
-	  // read story file with the same name of image
-	  fs.readFile(STORY_PATH + rootFilename + '.txt', 'utf8', function(err, data) {
-		  if (err) {
-		  	console.error("[neronius-bot] missing story");
-		  	// remove the image without associated story
-		  	fs.unlink(IMG_PATH + filename, function(err, data) {
-		  		console.log("[neronius-bot] file removed: " + filename);
-		  		// retry
-			  	generatePost();
-		  	});
-		  } else {
-			  getPostContent(rootFilename, data, filename);
-		  }
-		});
-	})
+			// remove the extension
+			rootFilename = filename.replace(/\.[^/.]+$/, "")
+		  
+		  // read story file with the same name of image
+		  fs.readFile(STORY_PATH + rootFilename + '.txt', 'utf8', function(err, data) {
+			  if (err) {
+			  	console.error("[neronius-bot] missing story");
+			  	// remove the image without associated story
+			  	fs.unlink(IMG_PATH + filename, function(err, data) {
+			  		console.log("[neronius-bot] file removed: " + filename);
+			  		// retry
+				  	generatePost();
+			  	});
+			  } else {
+				  getPostContent(rootFilename, data, filename);
+			  }
+			});
+		}
+	});
 }
 
 function getPostContent(title, story, image) {

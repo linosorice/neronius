@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
+const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config()
 const CronJob = require('cron').CronJob;
 const steem = require('steem');
 const request = require('request');
 const fs = require('fs');
-const TelegramBot = require('node-telegram-bot-api');
 
 // setting build rpc node 
 steem.api.setOptions({ url: 'wss://rpc.buildteam.io' });

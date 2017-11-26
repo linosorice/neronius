@@ -7,6 +7,9 @@ const request = require('request');
 const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
 
+// setting build rpc node 
+steem.api.setOptions({ url: 'wss://rpc.buildteam.io' });
+
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: true});
 

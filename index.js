@@ -21,6 +21,14 @@ bot.on('message', (msg) => {
 			bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'Numero di post pronti: ' + files.length);
 		});
 	}
+	if (msg.text.toString().toLowerCase().includes('/voting_power')) {
+		steem.api.getAccounts(['neronius'], function(err, result) {
+			var secondsago = (new Date - new Date(result[0].last_vote_time + "Z")) / 1000;
+		    var vpow = result[0].voting_power + (10000 * secondsago / 432000);
+	        vpow = Math.min(vpow / 100, 100).toFixed(2);
+			console.log(vpow);
+		});
+	}
 });
 
 function generatePost() {

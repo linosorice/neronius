@@ -31,11 +31,22 @@ bot.on('message', (msg) => {
 	}
 	if (msg.text.toString().toLowerCase().includes('/money')) {
 		steem.api.getAccounts(['neronius'], function(err, result) {
-			bot.sendMessage(msg.chat.id, result[0].balance + " " + result[0].sbd_balance);
+			steem.api.getDynamicGlobalProperties(function(err1, gprops) {
+				const totalVestingFundSteem = parseFloat(gprops.total_vesting_fund_steem.replace(" STEEM", ""))
+		        const totalVestingShares = parseFloat(gprops.total_vesting_shares.replace(" VESTS", ""))
+		        const vestingShares = parseFloat(result[0].vesting_shares.replace(" VESTS", ""))
+		        const receivedVestingShares = parseFloat(result[0].received_vesting_shares.replace(" VESTS", ""))
+
+		        let totalSteemPower = (totalVestingFundSteem * ((vestingShares + receivedVestingShares) / totalVestingShares))
+
+		        if (totalSteemPower == null) {
+		          totalSteemPower = 0
+		        }
+				bot.sendMessage(msg.chat.id, result[0].balance + "\n" + result[0].sbd_balance + "\n" + totalSteemPower.toFixed(3) + ' STEEM POWER');
+			});
 		});
 	}
 });
-
 
 function generatePost() {
 

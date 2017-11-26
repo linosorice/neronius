@@ -29,7 +29,13 @@ bot.on('message', (msg) => {
 			bot.sendMessage(msg.chat.id, 'My current voting power: ' + vpow + '%');
 		});
 	}
+	if (msg.text.toString().toLowerCase().includes('/money')) {
+		steem.api.getAccounts(['lino'], function(err, result) {
+			bot.sendMessage(msg.chat.id, result[0].balance + " " + result[0].sbd_balance);
+		});
+	}
 });
+
 
 function generatePost() {
 

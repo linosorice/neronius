@@ -30,7 +30,7 @@ bot.on('message', (msg) => {
 		});
 	}
 	if (msg.text.toString().toLowerCase().includes('/money')) {
-		steem.api.getAccounts(['lino'], function(err, result) {
+		steem.api.getAccounts(['neronius'], function(err, result) {
 			bot.sendMessage(msg.chat.id, result[0].balance + " " + result[0].sbd_balance);
 		});
 	}

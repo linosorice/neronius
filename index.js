@@ -150,61 +150,61 @@ function votePost(link) {
 
 // 0 a.m.
 new CronJob('0 0 0 * * *', function() {
-  console.log('[neronius-bot] post at 0 a.m.');
+  console.log('[neronius-bot] post at 0:00 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 2 a.m.
 new CronJob('0 24 2 * * *', function() {
-  console.log('[neronius-bot] post at 2 a.m.');
+  console.log('[neronius-bot] post at 2:24 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 4 a.m.
 new CronJob('0 48 4 * * *', function() {
-  console.log('[neronius-bot] post at 4 a.m.');
+  console.log('[neronius-bot] post at 4:48 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 6 a.m.
 new CronJob('0 12 7 * * *', function() {
-  console.log('[neronius-bot] post at 6 a.m.');
+  console.log('[neronius-bot] post at 7:12 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 8 a.m.
 new CronJob('0 36 9 * * *', function() {
-  console.log('[neronius-bot] post at 8 a.m.');
+  console.log('[neronius-bot] post at 9:36 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 10 a.m.
 new CronJob('0 0 12 * * *', function() {
-  console.log('[neronius-bot] post at 8 a.m.');
+  console.log('[neronius-bot] post at 12:00 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 0 p.m.
 new CronJob('0 24 14 * * *', function() {
-  console.log('[neronius-bot] post at 0 p.m.');
+  console.log('[neronius-bot] post at 14:24 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 2 p.m.
 new CronJob('0 48 16 * * *', function() {
-  console.log('[neronius-bot] post at 2 p.m.');
+  console.log('[neronius-bot] post at 16:48 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 4 p.m.
 new CronJob('0 12 19 * * *', function() {
-  console.log('[neronius-bot] post at 4 p.m.');
+  console.log('[neronius-bot] post at 19:12 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 6 p.m.
 new CronJob('0 36 22 * * *', function() {
-  console.log('[neronius-bot] post at 6 p.m.');
+  console.log('[neronius-bot] post at 22:36 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome'); 
 

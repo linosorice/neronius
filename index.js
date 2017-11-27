@@ -155,57 +155,57 @@ new CronJob('0 0 0 * * *', function() {
 }, null, true, 'Europe/Rome');
 
 // 2 a.m.
-new CronJob('0 0 2 * * *', function() {
+new CronJob('0 24 2 * * *', function() {
   console.log('[neronius-bot] post at 2 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 4 a.m.
-new CronJob('0 0 4 * * *', function() {
+new CronJob('0 48 4 * * *', function() {
   console.log('[neronius-bot] post at 4 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 6 a.m.
-new CronJob('0 0 6 * * *', function() {
+new CronJob('0 12 7 * * *', function() {
   console.log('[neronius-bot] post at 6 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 8 a.m.
-new CronJob('0 0 8 * * *', function() {
+new CronJob('0 36 9 * * *', function() {
+  console.log('[neronius-bot] post at 8 a.m.');
+	generatePost();
+}, null, true, 'Europe/Rome');
+
+// 10 a.m.
+new CronJob('0 0 12 * * *', function() {
   console.log('[neronius-bot] post at 8 a.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 0 p.m.
-new CronJob('0 0 12 * * *', function() {
+new CronJob('0 24 14 * * *', function() {
   console.log('[neronius-bot] post at 0 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 2 p.m.
-new CronJob('0 0 14 * * *', function() {
+new CronJob('0 48 16 * * *', function() {
   console.log('[neronius-bot] post at 2 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 4 p.m.
-new CronJob('0 0 16 * * *', function() {
+new CronJob('0 12 19 * * *', function() {
   console.log('[neronius-bot] post at 4 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome');
 
 // 6 p.m.
-new CronJob('0 0 18 * * *', function() {
+new CronJob('0 36 22 * * *', function() {
   console.log('[neronius-bot] post at 6 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome'); 
-
-// 8 p.m.
-new CronJob('0 0 20 * * *', function() {
-  console.log('[neronius-bot] post at 8 p.m.');
-	generatePost();
-}, null, true, 'Europe/Rome');
 
 app.listen(2345, () => console.log('Neronius listening on port 2345!'))

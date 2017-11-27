@@ -96,7 +96,7 @@ function getPostContent(title, story, image) {
 }
 
 function createPost(title, story, urlImage) {
-	content = "<center>![]("+urlImage+")</center> \n\n " + story + ' \n\n --- \n\n This post is made by an artifical intelligence called Neronius';
+	content = "<center>![]("+urlImage+")</center> \n\n " + story + ' \n\n --- \n\n This post was made by an artifical intelligence called Neronius';
 	broadcastPost(title, content);
 }
 

@@ -29,6 +29,7 @@ bot.on('message', (msg) => {
 	if (msg.text.toString().toLowerCase().includes('/'+process.env.TELEGRAM_BOT_COMMAND)) {
 		fs.readdir(IMG_PATH, (err, files) => {
 			bot.sendMessage(msg.chat.id, 'My ready posts: ' + files.length);
+			closeServer();
 		});
 	} else if (msg.text.toString().toLowerCase().includes('/voting_power')) {
 		steem.api.getAccounts(['neronius'], function(err, result) {
@@ -36,6 +37,7 @@ bot.on('message', (msg) => {
 		  var vpow = result[0].voting_power + (10000 * secondsago / 432000);
 	   	vpow = Math.min(vpow / 100, 100).toFixed(2);
 			bot.sendMessage(msg.chat.id, 'My current voting power: ' + vpow + '%');
+			closeServer();
 		});
 	} else if (msg.text.toString().toLowerCase().includes('/money')) {
 		steem.api.getAccounts(['neronius'], function(err, result) {
@@ -51,13 +53,8 @@ bot.on('message', (msg) => {
           totalSteemPower = 0
         }
         var text = result[0].balance + "\n" + result[0].sbd_balance + "\n" + totalSteemPower.toFixed(3) + ' STEEM POWER';
-				console.log(text);		        
 				bot.sendMessage(msg.chat.id, text);
-				setTimeout(() => {
-			    server.close(() => {
-		        process.exit(1);
-			    });
-				}, 3000);
+				closeServer();
 			});
 		});
 
@@ -67,7 +64,7 @@ bot.on('message', (msg) => {
 function generatePost() {
 	fs.readdir(IMG_PATH, function(err, items) {
 		if (items && items.length > 0) {
-			var filename = items[0];
+			var filename = items[Math.floor(Math.random() * items.length)];;
 	  	console.log("[neronius-bot] try file: " + filename);
 
 			// remove the extension
@@ -129,21 +126,20 @@ function broadcastPost(title, content) {
     function(err, result) {
     	if (err) { return console.error('[neronius-bot] error broadcast post') }
 		  console.log('[neronius-bot] post uploaded: ' + postLink);
-			sendMessage(postLink);
+			
+			// Send telegram message
+			var postLink = "https://steemit.com/neronius/@" + process.env.AUTHOR_USERNAME + '/' + postLink;
+			bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'New post! ' + postLink);
+			
   		votePost(postLink);
-			removeFiles(title);
+			
+  		// Remove files
+			fs.unlinkSync(IMG_PATH + title + '.jpg');
+			fs.unlinkSync(STORY_PATH + title + '.txt');
+			
+			closeServer();
     }
   );
-};
-
-function sendMessage(link) {
-	var postLink = "https://steemit.com/neronius/@" + process.env.AUTHOR_USERNAME + '/' + link;
-	bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'New post! ' + postLink);
-}
-
-function removeFiles(name) {
-	fs.unlinkSync(IMG_PATH + name + '.jpg');
-	fs.unlinkSync(STORY_PATH + name + '.txt');
 };
 
 function votePost(link) {
@@ -160,6 +156,14 @@ function votePost(link) {
     }
   );
 };
+
+function closeServer() {
+	setTimeout(() => {
+    server.close(() => {
+      process.exit(1);
+    });
+	}, process.env.CLOSE_DELAY);
+}
 
 // 0 a.m.
 new CronJob('0 0 0 * * *', function() {

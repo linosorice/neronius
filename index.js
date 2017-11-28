@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-//const TelegramBot = require('node-telegram-bot-api');
+const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config()
 const CronJob = require('cron').CronJob;
 const steem = require('steem');
@@ -11,14 +11,14 @@ const fs = require('fs');
 steem.api.setOptions({ url: 'wss://rpc.buildteam.io' });
 
 // Create a bot that uses 'polling' to fetch new updates
-//const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: true});
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: true});
 
 // Paths
 const IMG_PATH = process.env.IMG_PATH;
 const STORY_PATH = process.env.STORY_PATH;
 
 // Listen for any kind of message.
-/*bot.on('message', (msg) => {
+bot.on('message', (msg) => {
 	if (msg.text.toString().toLowerCase().includes('/'+process.env.TELEGRAM_BOT_COMMAND)) {
 		fs.readdir(IMG_PATH, (err, files) => {
 			bot.sendMessage(msg.chat.id, 'My ready posts: ' + files.length);
@@ -49,7 +49,7 @@ const STORY_PATH = process.env.STORY_PATH;
 			});
 		});
 	}
-});*/
+});
 
 function generatePost() {
 	fs.readdir(IMG_PATH, function(err, items) {
@@ -116,8 +116,8 @@ function broadcastPost(title, content) {
     function(err, result) {
     	if (err) { return console.error('[neronius-bot] error broadcast post') }
 		  console.log('[neronius-bot] post uploaded: ' + postLink);
-			//sendMessage(postLink);
-      		votePost(postLink);
+			sendMessage(postLink);
+  		//votePost(postLink);
 			removeFiles(title);
     }
   );

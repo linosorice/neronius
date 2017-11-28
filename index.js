@@ -7,6 +7,10 @@ const steem = require('steem');
 const request = require('request');
 const fs = require('fs');
 
+app.get('/test', function (req, res) {
+	generatePost();
+  res.send('Test');
+});
 // setting build rpc node 
 steem.api.setOptions({ url: 'wss://rpc.buildteam.io' });
 

@@ -11,6 +11,9 @@ app.get('/test', function (req, res) {
 	generatePost();
   res.send('Test');
 });
+
+var server = app.listen(PORT, () => console.log('Neronius listening on port ' + PORT))
+
 // setting build rpc node 
 steem.api.setOptions({ url: 'wss://rpc.buildteam.io' });
 
@@ -20,6 +23,7 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: true});
 // Paths
 const IMG_PATH = process.env.IMG_PATH;
 const STORY_PATH = process.env.STORY_PATH;
+const PORT = 2345
 
 // Listen for any kind of message.
 bot.on('message', (msg) => {
@@ -27,16 +31,15 @@ bot.on('message', (msg) => {
 		fs.readdir(IMG_PATH, (err, files) => {
 			bot.sendMessage(msg.chat.id, 'My ready posts: ' + files.length);
 		});
-	}
-	if (msg.text.toString().toLowerCase().includes('/voting_power')) {
+	} else if (msg.text.toString().toLowerCase().includes('/voting_power')) {
 		steem.api.getAccounts(['neronius'], function(err, result) {
 			var secondsago = (new Date - new Date(result[0].last_vote_time + "Z")) / 1000;
-		    var vpow = result[0].voting_power + (10000 * secondsago / 432000);
-	        vpow = Math.min(vpow / 100, 100).toFixed(2);
+		  var vpow = result[0].voting_power + (10000 * secondsago / 432000);
+	   	vpow = Math.min(vpow / 100, 100).toFixed(2);
 			bot.sendMessage(msg.chat.id, 'My current voting power: ' + vpow + '%');
+			server.close();
 		});
-	}
-	if (msg.text.toString().toLowerCase().includes('/money')) {
+	} else if (msg.text.toString().toLowerCase().includes('/money')) {
 		steem.api.getAccounts(['neronius'], function(err, result) {
 			steem.api.getDynamicGlobalProperties(function(err1, gprops) {
 				const totalVestingFundSteem = parseFloat(gprops.total_vesting_fund_steem.replace(" STEEM", ""))
@@ -50,6 +53,7 @@ bot.on('message', (msg) => {
 		          totalSteemPower = 0
 		        }
 				bot.sendMessage(msg.chat.id, result[0].balance + "\n" + result[0].sbd_balance + "\n" + totalSteemPower.toFixed(3) + ' STEEM POWER');
+				server.close();
 			});
 		});
 	}
@@ -111,17 +115,17 @@ function broadcastPost(title, content) {
   steem.broadcast.comment(
     process.env.AUTHOR_POSTING_WIF,
     '', // Leave parent author empty
-    'neronius', // Main tag
+    'story', // Main tag
     process.env.AUTHOR_USERNAME, // Author
     postLink, // Permlink
     title, // Title
     content, // Body
-    { tags: ['story', 'technology', 'neural-network', 'ai'], app: 'steemjs/examples' }, // Json Metadata
+    { tags: ['neronius', 'technology', 'life', 'ai'], app: 'steemjs/examples' }, // Json Metadata
     function(err, result) {
     	if (err) { return console.error('[neronius-bot] error broadcast post') }
 		  console.log('[neronius-bot] post uploaded: ' + postLink);
 			sendMessage(postLink);
-  		//votePost(postLink);
+  		votePost(postLink);
 			removeFiles(title);
     }
   );
@@ -148,6 +152,7 @@ function votePost(link) {
     function(err, result) {
     	if (err) { return console.error('[neronius-bot] error vote post') }
 		  console.log("[neronius-bot] post upvoted");
+			server.close();
     }
   );
 };
@@ -211,5 +216,3 @@ new CronJob('0 36 22 * * *', function() {
   console.log('[neronius-bot] post at 22:36 p.m.');
 	generatePost();
 }, null, true, 'Europe/Rome'); 
-
-app.listen(2345, () => console.log('Neronius listening on port 2345!'))

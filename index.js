@@ -7,23 +7,22 @@ const steem = require('steem');
 const request = require('request');
 const fs = require('fs');
 
+// Paths
+const IMG_PATH = process.env.IMG_PATH;
+const STORY_PATH = process.env.STORY_PATH;
+
 app.get('/test', function (req, res) {
 	generatePost();
   res.send('Test');
 });
 
-var server = app.listen(PORT, () => console.log('Neronius listening on port ' + PORT))
+var server = app.listen(process.env.PORT, () => console.log('Neronius listening on port ' + process.env.PORT))
 
 // setting build rpc node 
 steem.api.setOptions({ url: 'wss://rpc.buildteam.io' });
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {polling: true});
-
-// Paths
-const IMG_PATH = process.env.IMG_PATH;
-const STORY_PATH = process.env.STORY_PATH;
-const PORT = 2345
 
 // Listen for any kind of message.
 bot.on('message', (msg) => {
@@ -37,25 +36,31 @@ bot.on('message', (msg) => {
 		  var vpow = result[0].voting_power + (10000 * secondsago / 432000);
 	   	vpow = Math.min(vpow / 100, 100).toFixed(2);
 			bot.sendMessage(msg.chat.id, 'My current voting power: ' + vpow + '%');
-			server.close();
 		});
 	} else if (msg.text.toString().toLowerCase().includes('/money')) {
 		steem.api.getAccounts(['neronius'], function(err, result) {
 			steem.api.getDynamicGlobalProperties(function(err1, gprops) {
 				const totalVestingFundSteem = parseFloat(gprops.total_vesting_fund_steem.replace(" STEEM", ""))
-		        const totalVestingShares = parseFloat(gprops.total_vesting_shares.replace(" VESTS", ""))
-		        const vestingShares = parseFloat(result[0].vesting_shares.replace(" VESTS", ""))
-		        const receivedVestingShares = parseFloat(result[0].received_vesting_shares.replace(" VESTS", ""))
+        const totalVestingShares = parseFloat(gprops.total_vesting_shares.replace(" VESTS", ""))
+        const vestingShares = parseFloat(result[0].vesting_shares.replace(" VESTS", ""))
+        const receivedVestingShares = parseFloat(result[0].received_vesting_shares.replace(" VESTS", ""))
 
-		        let totalSteemPower = (totalVestingFundSteem * ((vestingShares + receivedVestingShares) / totalVestingShares))
+        let totalSteemPower = (totalVestingFundSteem * ((vestingShares + receivedVestingShares) / totalVestingShares))
 
-		        if (totalSteemPower == null) {
-		          totalSteemPower = 0
-		        }
-				bot.sendMessage(msg.chat.id, result[0].balance + "\n" + result[0].sbd_balance + "\n" + totalSteemPower.toFixed(3) + ' STEEM POWER');
-				server.close();
+        if (totalSteemPower == null) {
+          totalSteemPower = 0
+        }
+        var text = result[0].balance + "\n" + result[0].sbd_balance + "\n" + totalSteemPower.toFixed(3) + ' STEEM POWER';
+				console.log(text);		        
+				bot.sendMessage(msg.chat.id, text);
+				setTimeout(() => {
+			    server.close(() => {
+		        process.exit(1);
+			    });
+				}, 3000);
 			});
 		});
+
 	}
 });
 
@@ -152,7 +157,6 @@ function votePost(link) {
     function(err, result) {
     	if (err) { return console.error('[neronius-bot] error vote post') }
 		  console.log("[neronius-bot] post upvoted");
-			server.close();
     }
   );
 };

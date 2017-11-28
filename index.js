@@ -126,20 +126,22 @@ function broadcastPost(title, content) {
     function(err, result) {
     	if (err) { return console.error('[neronius-bot] error broadcast post') }
 		  console.log('[neronius-bot] post uploaded: ' + postLink);
-			
-			// Send telegram message
-			var postLink = "https://steemit.com/neronius/@" + process.env.AUTHOR_USERNAME + '/' + postLink;
-			bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'New post! ' + postLink);
-			
+			sendMessage(postLink);
   		votePost(postLink);
-			
-  		// Remove files
-			fs.unlinkSync(IMG_PATH + title + '.jpg');
-			fs.unlinkSync(STORY_PATH + title + '.txt');
-			
+			removeFiles(title);
 			closeServer();
     }
   );
+};
+
+function sendMessage(link) {
+	var postLink = "https://steemit.com/neronius/@" + process.env.AUTHOR_USERNAME + '/' + link;
+	bot.sendMessage(process.env.TELEGRAM_CHAT_ID, 'New post! ' + postLink);
+}
+
+function removeFiles(name) {
+	fs.unlinkSync(IMG_PATH + name + '.jpg');
+	fs.unlinkSync(STORY_PATH + name + '.txt');
 };
 
 function votePost(link) {

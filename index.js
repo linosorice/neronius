@@ -57,8 +57,10 @@ bot.on('message', (msg) => {
 				closeServer();
 			});
 		});
-
-	}
+	} else if (msg.text.toString().toLowerCase().includes('ping')) {
+		bot.sendMessage(msg.chat.id, 'pong');
+		closeServer()
+	} 
 });
 
 function generatePost() {

@@ -57,10 +57,10 @@ bot.on('message', (msg) => {
 				closeServer();
 			});
 		});
-	} else if (msg.text.toString().toLowerCase().includes('ping')) {
-		bot.sendMessage(msg.chat.id, 'pong');
+	} else if (msg.text.toString().toLowerCase().includes('pong')) {
+		bot.sendMessage(msg.chat.id, 'Spacobot Suca');
 		closeServer()
-	} 
+	}
 });
 
 function generatePost() {

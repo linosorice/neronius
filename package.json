@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "standard"
   },
   "author": "Pasqualino Sorice",
   "license": "ISC",
@@ -16,5 +16,8 @@
     "node-telegram-bot-api": "^0.29.0",
     "request": "^2.83.0",
     "steem": "^0.6.4"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3"
   }
 }
